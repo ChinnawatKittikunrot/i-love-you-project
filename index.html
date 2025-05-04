@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Love You 💖</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffb6c1, #87ceeb);
+            overflow: hidden;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+        }
+        #message {
+            font-size: 48px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        #message.show {
+            opacity: 1;
+        }
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: red;
+            animation: float 5s linear infinite;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(100vh);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="message"></div>
+    <script>
+        const message = "I Love You 💖";
+        const messageElement = document.getElementById('message');
+        const delay = 500; // Delay per character in milliseconds
+
+        function displayMessage() {
+            let index = 0;
+            messageElement.textContent = '';
+            function showNextChar() {
+                if (index < message.length) {
+                    messageElement.textContent += message[index];
+                    index++;
+                    setTimeout(showNextChar, delay);
+                } else {
+                    messageElement.classList.add('show');
+                }
+            }
+            showNextChar();
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '♥';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        displayMessage();
+        setInterval(createHeart, 300);
+
+        localStorage.setItem('loveMessage', JSON.stringify({
+            message: message,
+            timestamp: new Date().toISOString(),
+            note: "To my dearest, I said 'I Love You' with all my heart! 💖"
+        }));
+    </script>
+</body>
+</html>
