@@ -20,11 +20,26 @@
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             text-align: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
+            /* กำหนดจุดกึ่งกลางสำหรับการซูม */
+            transform-origin: center center;
         }
-        #message.show {
-            opacity: 1;
+        #message.zoom {
+            animation: zoomInOut 1.5s linear infinite alternate;
+        }
+        @keyframes zoomInOut {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.1);
+            }
+        }
+        .blinking-char {
+            animation: blinker-char 0.5s linear infinite alternate;
+        }
+        @keyframes blinker-char {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
         .heart {
             position: absolute;
@@ -49,18 +64,31 @@
     <script>
         const message = "I Love You 💖";
         const messageElement = document.getElementById('message');
-        const delay = 500; // Delay per character in milliseconds
+        const delay = 300; // Delay per character in milliseconds
+        const zoomDelay = 1000; // Delay before starting the zoom animation
 
         function displayMessage() {
             let index = 0;
-            messageElement.textContent = '';
+            messageElement.innerHTML = ''; // Clear initial content
+
             function showNextChar() {
                 if (index < message.length) {
-                    messageElement.textContent += message[index];
+                    const charSpan = document.createElement('span');
+                    charSpan.textContent = message[index];
+                    charSpan.classList.add('blinking-char');
+                    messageElement.appendChild(charSpan);
+
+                    setTimeout(() => {
+                        charSpan.classList.remove('blinking-char');
+                    }, 500); // ระยะเวลาให้กระพริบ (ควรสั้นกว่า delay)
+
                     index++;
                     setTimeout(showNextChar, delay);
                 } else {
-                    messageElement.classList.add('show');
+                    // Start the zoom animation after the text is fully displayed
+                    setTimeout(() => {
+                        messageElement.classList.add('zoom');
+                    }, zoomDelay);
                 }
             }
             showNextChar();
